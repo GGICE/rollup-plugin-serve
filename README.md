@@ -1,9 +1,16 @@
 # Rollup plugin to serve the bundle
 
+## Explain
+
+Keep updates active, fix bugs at a loss, and actively incorporate PR. Based on rollup-plugin-serve version 1.0.1.
+
+Welcome to use rollup-plugin-serve2!
+
+
 <a href="LICENSE">
   <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="Software License" />
 </a>
-<a href="https://github.com/thgh/rollup-plugin-serve/issues">
+<a href="https://github.com/GGICE/rollup-plugin-serve/issues">
   <img src="https://img.shields.io/github/issues/thgh/rollup-plugin-serve.svg" alt="Issues" />
 </a>
 <a href="http://standardjs.com/">
@@ -12,23 +19,23 @@
 <a href="https://npmjs.org/package/rollup-plugin-serve">
   <img src="https://img.shields.io/npm/v/rollup-plugin-serve.svg?style=flat-squar" alt="NPM" />
 </a>
-<a href="https://github.com/thgh/rollup-plugin-serve/releases">
+<a href="https://github.com/GGICE/rollup-plugin-serve/releases">
   <img src="https://img.shields.io/github/release/thgh/rollup-plugin-serve.svg" alt="Latest Version" />
 </a>
 
 ## Installation
 ```
 # Rollup v0.60+ and v1+
-npm install --save-dev rollup-plugin-serve
+npm install --save-dev rollup-plugin-serve2
 
 # Rollup v0.59 and below
-npm install --save-dev rollup-plugin-serve@0
+npm install --save-dev rollup-plugin-serve2@0
 ```
 
 ## Usage
 ```js
 // rollup.config.js
-import serve from 'rollup-plugin-serve'
+import serve from 'rollup-plugin-serve2'
 
 export default {
   input: 'src/main.js',
@@ -103,6 +110,13 @@ serve({
     const protocol = this.https ? 'https' : 'http'
     console.log(`Server listening at ${protocol}://${host}:${address.port}/`)
   }
+
+  // Set up simple proxy
+  // this will route all traffic starting with
+  // `/api` to http://localhost:8181/api
+  proxy: {
+    api: 'http://localhost:8181'
+  }
 })
 ```
 
@@ -132,4 +146,4 @@ The MIT License (MIT). Please see [License File](LICENSE) for more information.
 
 [link-author]: https://github.com/thgh
 [link-contributors]: ../../contributors
-[rollup-plugin-serve]: https://www.npmjs.com/package/rollup-plugin-serve
+[rollup-plugin-serve2]: https://www.npmjs.com/package/rollup-plugin-serve2

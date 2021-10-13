@@ -2,6 +2,10 @@
 
 All notable changes to `rollup-plugin-serve` will be documented in this file.
 
+## [1.1.1] - 2021-10-12
+### Added
+- Add `proxy` support
+
 ## [1.1.0] - 2020-11-01
 ### Added
 - Add `onListening` hook #69 @filoxo

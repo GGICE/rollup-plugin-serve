@@ -1,6 +1,6 @@
 import { readFile } from 'fs'
-import { createServer as createHttpsServer } from 'https'
-import { createServer } from 'http'
+import https, { createServer as createHttpsServer } from 'https'
+import http, { createServer } from 'http'
 import { resolve, posix } from 'path'
 
 import mime from 'mime'
@@ -22,11 +22,19 @@ function serve (options = { contentBase: '' }) {
   options.https = options.https || false
   options.openPage = options.openPage || ''
   options.onListening = options.onListening || function noop () { }
+  options.proxy = options.proxy || {}
   mime.default_type = 'text/plain'
 
   if (options.mimeTypes) {
     mime.define(options.mimeTypes, true)
   }
+
+  const proxies = Object.keys(options.proxy).map(proxy => ({
+    proxy,
+    destination: options.proxy[proxy],
+    // eslint-disable-next-line
+    test: new RegExp(`\/${proxy}`)
+  }))
 
   const requestListener = (request, response) => {
     // Remove querystring
@@ -38,6 +46,43 @@ function serve (options = { contentBase: '' }) {
     Object.keys(options.headers).forEach((key) => {
       response.setHeader(key, options.headers[key])
     })
+
+    // Find the appropriate proxy for the request if one exists
+    const proxy = proxies.find(({ test }) => request.url.match(test))
+
+    // If a proxy exists, forward the request to the appropriate server
+    if (proxy && proxy.destination) {
+      const { destination } = proxy
+      const newDestination = `${destination}${request.url}`
+      const { headers, method } = request
+
+      // Get the request contents
+      let body = ''
+      request.on('data', chunk => { body += chunk })
+
+      // Forward the request
+      request.on('end', () => {
+        const httpServer = newDestination.startsWith('https://') ? https : http
+        const proxyRequest = httpServer
+          .request(newDestination, {
+            headers: Object.assign({}, headers, {
+              host: (new URL(newDestination)).host
+            }),
+            method
+          }, (proxyResponse) => {
+            const data = []
+            proxyResponse.on('data', chunk => data.push(chunk))
+            proxyResponse.on('end', () => {
+              Object.keys(proxyResponse.headers).forEach(key => response.setHeader(key, proxyResponse.headers[key]))
+              foundProxy(response, proxyResponse.statusCode, Buffer.concat(data))
+            })
+          }).end(body, 'utf-8')
+
+        proxyRequest.on('error', err => console.error(`There was a problem with the request for ${request.url}: ${err}`))
+        proxyRequest.end()
+      })
+      return
+    }
 
     readFileFromContentBase(options.contentBase, urlPath, function (error, content, filePath) {
       if (!error) {
@@ -153,6 +198,11 @@ function found (response, filePath, content) {
 
 function green (text) {
   return '\u001b[1m\u001b[32m' + text + '\u001b[39m\u001b[22m'
+}
+
+function foundProxy (response, status, content) {
+  response.writeHead(status)
+  response.end(content, 'utf-8')
 }
 
 function closeServerOnTermination () {
