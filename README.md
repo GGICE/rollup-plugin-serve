@@ -11,16 +11,13 @@ Welcome to use rollup-plugin-serve2!
   <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="Software License" />
 </a>
 <a href="https://github.com/GGICE/rollup-plugin-serve/issues">
-  <img src="https://img.shields.io/github/issues/thgh/rollup-plugin-serve.svg" alt="Issues" />
+  <img src="https://img.shields.io/github/issues/GGICE/rollup-plugin-serve.svg" alt="Issues" />
 </a>
 <a href="http://standardjs.com/">
   <img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg" alt="JavaScript Style Guide" />
 </a>
 <a href="https://npmjs.org/package/rollup-plugin-serve">
-  <img src="https://img.shields.io/npm/v/rollup-plugin-serve.svg?style=flat-squar" alt="NPM" />
-</a>
-<a href="https://github.com/GGICE/rollup-plugin-serve/releases">
-  <img src="https://img.shields.io/github/release/thgh/rollup-plugin-serve.svg" alt="Latest Version" />
+  <img src="https://img.shields.io/npm/v/rollup-plugin-serve2.svg?style=flat-squar" alt="NPM" />
 </a>
 
 ## Installation
